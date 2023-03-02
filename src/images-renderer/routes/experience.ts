@@ -1,44 +1,44 @@
-import { NowRequest, NowResponse } from '@vercel/node';
+import { Request, Response } from 'express';
 import _ from 'lodash';
 import API from '../helpers/api';
 import ExperienceRenderer from '../renderers/experience';
 
-export default async (req: NowRequest, res: NowResponse) => {
-  res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-  res.setHeader('Expires', '-1');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Content-Type', 'image/svg+xml');
-  if (_.get(req, ['query', 'username'])) {
-    const limit = _.get(req, ['query', 'limit'], null);
-    let profileData = null;
-    try {
-      profileData = await API.getProfileData((_.get(req, ['query', 'username']) as string));
-    } catch (e) {
-      profileData = null;
-    }
-    if (profileData) {
-      const experience = new ExperienceRenderer(_.get(profileData, ['positions']), (limit as number));
-      const image = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" width="100%" height="100%">
+export default async (req: Request, res: Response) => {
+	res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+	res.setHeader('Expires', '-1');
+	res.setHeader('Pragma', 'no-cache');
+	res.setHeader('Content-Type', 'image/svg+xml');
+	if (_.get(req, ['query', 'username'])) {
+		const limit = _.get(req, ['query', 'limit'], null);
+		let profileData = null;
+		try {
+			profileData = await API.getProfileData(_.get(req, ['query', 'username']) as string);
+		} catch (e) {
+			profileData = null;
+		}
+		if (profileData) {
+			const experience = new ExperienceRenderer(_.get(profileData, ['positions']), limit as number);
+			const image = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" width="100%" height="100%">
         <style>
           * {
-            font-family: 'Segoe UI', Ubuntu, Sans-Serif;
+            font-family: system, system-ui, -apple-system, '.SFNSText-Regular', 'San Francisco', 'Roboto', 'Segoe UI', 'Helvetica Neue', 'Lucida Grande', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
           }
         </style>
         ${experience.list}
       </svg>`;
-      res.send(image);
-    } else {
-      res.send(`
+			res.send(image);
+		} else {
+			res.send(`
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100%" height="100%">
           <text x="0" y="15" fill="red">Error!</text>
         </svg>
       `);
-    }
-  } else {
-    res.send(`
+		}
+	} else {
+		res.send(`
       <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100%" height="100%">
         <text x="0" y="15" fill="red">Username is required!</text>
       </svg>
     `);
-  }
+	}
 };

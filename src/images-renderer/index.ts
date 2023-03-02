@@ -14,8 +14,12 @@ app.get('/skills', skills);
 app.get('/languages', languages);
 app.get('/user', user);
 
+// Initializing the router from express
+const router = express.Router();
+
+// Assigning a port that is already in use
 const port = process.env.PORT || '8000';
-app.listen(port, err => {
-  if (err) return console.error(err);
-  return console.log(`Server is listening on ${port}`);
+// App listening on the below port
+app.listen(port, () => {
+	console.log(`Example app listening on port ${port}`);
 });
