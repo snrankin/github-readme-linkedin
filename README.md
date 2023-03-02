@@ -22,7 +22,7 @@ If you want to use this project on your GitHub profile, I recommend you [fork an
 ```MD
 <img src="[YOUR_VERCEL_PROJECT_DOMAIN]/[METHOD]?username=[YOUR_LINKEDIN_USERNAME]" />
 ```
-
+<img src="https://github-readme-linkedin-kappa.vercel.app/user?username=snrankin" />
 <br>
 
 ## Methods
